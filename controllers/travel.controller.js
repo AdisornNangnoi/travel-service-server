@@ -6,7 +6,7 @@ const Travel = require("./../models/travel.model.js");
 
 exports.createTravel = async (req, res) => {
   try {
-    const travel = await Travel.create(req.body);
+    const result = await Travel.create(req.body);
     res
       .status(201)
       .json({ message: "Travel created successfully!", data: result });

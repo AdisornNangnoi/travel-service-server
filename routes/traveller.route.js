@@ -9,4 +9,4 @@ router.get("/:travellerEmail/:travellerPassword", travellerCtrl.checkLoginTravel
 router.put("/:travellerID", travellerCtrl.editTraveller);
 
 
-module.exports = router;
+module.exports = router;    

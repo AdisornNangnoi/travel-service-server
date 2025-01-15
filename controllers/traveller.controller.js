@@ -3,7 +3,7 @@ const Traveller = require("./../models/traveller.model.js");
 
 exports.createTraveller = async (req, res) => {
   try {
-    const traveller = await Traveller.create(req.body);
+    const result = await Traveller.create(req.body);
     res
       .status(201)
       .json({ message: "Traveller created successfully!", data: result });
@@ -42,4 +42,3 @@ exports.editTraveller = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
