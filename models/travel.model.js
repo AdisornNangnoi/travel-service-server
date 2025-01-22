@@ -5,11 +5,11 @@ const sequelize = require("./../db/db.js");
 const Travel = sequelize.define(
   "travel_tb",
   {
-    travelID: {
+    travelId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      field: "travelID",
+      field: "travelId",
     },
     travelPlace: {
       type: Sequelize.STRING(200),
@@ -31,10 +31,15 @@ const Travel = sequelize.define(
       allowNull: false,
       field: "travelCostTotal",
     },
-    travellerID: {
+    travellerId: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      field: "travellerID",
+      field: "travellerId",
+    },
+    travelImage: {
+      type: Sequelize.STRING(150),
+      allowNull: false,
+      field: "travelImage",
     },
   },
   {

@@ -2,12 +2,12 @@ const travelCtrl = require("./../controllers/travel.controller.js");
 const express = require("express");
 const router = express.Router();
 
-router.post("/", travelCtrl.createTravel);
+router.post("/", travelCtrl.uploadTravel,travelCtrl.createTravel);
 
-router.get("/:travellerID", travelCtrl.getTravel);
+router.get("/:travellerId", travelCtrl.getAllTravel);
 
-router.put("/:travelID", travelCtrl.editTravel);
+router.put("/:travelId", travelCtrl.editTravel);
 
-router.delete("/:travelID", travelCtrl.deleteTravel);
+router.delete("/:travelId", travelCtrl.deleteTravel);
 
 module.exports = router;
