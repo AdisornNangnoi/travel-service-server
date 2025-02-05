@@ -1,6 +1,7 @@
 const multer = require("multer");
 const path = require("path");
 const Traveller = require("./../models/traveller.model.js");
+const fs = require("fs");
 
 // Traveller Image upload function
 const storage = multer.diskStorage({
@@ -35,25 +36,26 @@ exports.uploadTraveller = multer({
 
 // Create Traveller
 
-exports.createTraveller = async (req, res) =>{
-  try{
-      //ตัวแปร 
-      let data ={
-          ...req.body,
-          travellerImage: req.file.path.replace("images\\traveller\\", "")
-      }
-      const result = await Traveller.create(data);
-      res.status(201).json({
-          message:"Traveller created successfully",
-          data: result
-      });
-  }   catch (error){
-      res.status(500).json({
-          message: error.message
-      });
+exports.createTraveller = async (req, res) => {
+  try {
+    //ตัวแปร
+    let data = {
+      ...req.body,
+      travellerImage: req.file
+        ? req.file.path.replace("images\\traveller\\", "")
+        : "",
+    };
+    const result = await Traveller.create(data);
+    res.status(201).json({
+      message: "Traveller created successfully",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
-
 
 // Check Login for Traveller
 exports.checkLoginTraveller = async (req, res) => {
@@ -77,13 +79,64 @@ exports.checkLoginTraveller = async (req, res) => {
 // Edit Traveller
 exports.editTraveller = async (req, res) => {
   try {
-    const result = await Traveller.update(req.body, {
+    let data = {
+      ...req.body,
+    };
+
+    if (req.file) { // Check if a new image is uploaded
+      const traveller = await Traveller.findOne({
+        where: {
+          travellerId: req.params.travellerId,
+        },
+      });
+
+      if (traveller.travellerImage) { // Delete the old image
+        const oldImagePath = "images/traveller/" + traveller.travellerImage;
+        fs.unlink(oldImagePath, (err) => {});
+      }
+
+      data.travellerImage = req.file.path.replace("images\\traveller\\", "");
+    }else{
+      delete data.travellerImage
+    }
+    const result = await Traveller.update(data, {
       where: {
-        travellerID: req.params.travellerID,
+        travellerId: req.params.travellerId,
       },
     });
     res.status(200).json({ message: "Edit successfully!", data: result });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+
+exports.deleteTraveller = async (req, res) => {
+  try {
+    const traveller = await Traveller.findOne({
+      where: {
+        travellerId: req.params.travellerId,
+      },
+    });
+
+    if (traveller.travellerImage) { // Delete the old image
+      const oldImagePath = "images/traveller/" + traveller.travellerImage;
+      fs.unlink(oldImagePath, (err) => {
+        console.log(err);
+      });
+    }
+    const result = await Traveller.destroy({
+      where: {
+        travellerId: req.params.travellerId,
+      },
+    });
+    res.status(200).json({
+      message: "Traveller deeleted successfully",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
